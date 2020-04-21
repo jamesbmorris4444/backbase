@@ -1,18 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
+        <import type="android.view.View"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <variable
+                name="uiViewModel"
+                type="com.fullsekurity.urbandict.ui.UIViewModel" />
+
+        <variable
+                name="mainActivity"
+                type="com.fullsekurity.urbandict.activity.MainActivity" />
+    </data>
+
+    <RelativeLayout
+            android:id="@+id/main_activity_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+        <android.widget.ImageView
+                android:id="@+id/main_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="center"
+                android:visibility="@{safeUnbox(uiViewModel.backgroundVisibleForLottie ? View.GONE : View.VISIBLE)}"
+                app:image_background="@{uiViewModel.standardBackground}"
+                android:layout_below="@+id/toolbar"
+                android:layout_alignParentBottom="true" />
+
+        <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/main_background_lottie"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="@{safeUnbox(uiViewModel.backgroundVisibleForLottie ? View.VISIBLE : View.GONE)}"
+                android:scaleType="centerCrop"
+                android:fillViewport="true"
+                android:layout_below="@+id/toolbar" />
+
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:layout_alignParentTop="true"
+                app:contentInsetStartWithNavigation="0dp"
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+
+            <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <ProgressBar
+            android:id="@+id/service_progresss_bar"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/toolbar"
+            style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <FrameLayout
+                android:id="@+id/main_activity_container"
+                android:layout_below="@+id/service_progresss_bar"
+                android:layout_marginTop="15dp"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        <ProgressBar
+                android:id="@+id/main_progress_bar"
+                style="?android:attr/progressBarStyleLarge"
+                android:visibility="gone"
+                android:indeterminateTint="@color/red"
+                android:layout_centerInParent="true"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:max="100"
+                android:indeterminate="true"
+                android:progress="1" />
+
+    </RelativeLayout>
+
+</layout>

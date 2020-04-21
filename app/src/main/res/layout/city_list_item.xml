@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <data>
+        <variable
+                name="uiViewModel"
+                type="com.fullsekurity.urbandict.ui.UIViewModel" />
+        <variable
+                name="cityItemViewModel"
+                type="com.fullsekurity.urbandict.city.CityItemViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/citys_item_root_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <android.widget.TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@{cityItemViewModel.name}"
+            app:text_font="@{uiViewModel.wordItemTextTypeface}"
+            app:text_color="@{uiViewModel.wordItemTextColor}"
+            app:text_size="@{safeUnbox(uiViewModel.wordItemTextSize)}"
+            app:layout_marginLeft="@{safeUnbox(uiViewModel.standardLeftAndRightMargin)}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <android.widget.TextView
+            android:id="@+id/country"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@{cityItemViewModel.country}"
+            app:text_font="@{uiViewModel.citysItemTextTypeface}"
+            app:text_color="@{uiViewModel.definitionItemTextColor}"
+            app:text_size="@{safeUnbox(uiViewModel.citysItemTextSize)}"
+            app:layout_marginLeft="@{safeUnbox(uiViewModel.standardLeftAndRightMargin)}"
+            app:layout_marginRight="@{safeUnbox(uiViewModel.standardLeftAndRightMargin)}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/name" />
+
+        <LinearLayout
+            android:id="@+id/divider"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:background_color="@{uiViewModel.standardDialogDividerColor}"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

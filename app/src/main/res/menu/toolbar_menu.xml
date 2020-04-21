@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_toggle_theme"
+        android:title="@string/action_toggle_themes"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_set_up_sort"
+        android:title="@string/action_set_up_sort"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_set_down_sort"
+        android:title="@string/action_set_down_sort"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/thumb_status"
+        android:icon="@drawable/ic_thumbsup_dark"
+        android:title=""
+        app:showAsAction="ifRoom"/>
+
+</menu>

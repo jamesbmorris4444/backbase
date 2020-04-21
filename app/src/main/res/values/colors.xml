@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="primary">#673AB7</color>
+    <color name="darkPrimary">#191970</color>
+    <color name="lightPrimary">#5B0691</color>
+    <color name="textIcons">#ffffff</color>
+    <color name="accent">#009688</color>
+    <color name="primaryText">#212121</color>
+    <color name="secondaryText">#727272</color>
+    <color name="divider">#B6B6B6</color>
+    <color name="red">#e50239</color>
+    <color name="blue">#3a3aff</color>
+    <color name="green">#00ff00</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="cyan">#00ffff</color>
+    <color name="transparent">#00000000</color>
+    <color name="veryLightGrayFromBlack">#08000000</color>
+    <color name="lighterGrayFromBlack">#38000000</color>
+    <color name="lightGrayFromBlack">#68000000</color>
+    <color name="mediumGrayFromBlack">#98000000</color>
+    <color name="darkGrayFromBlack">#c8000000</color>
+    <color name="darkestGrayFromBlack">#e8000000</color>
+    <color name="veryLightGrayFromWhite">#08ffffff</color>
+    <color name="lighterGrayFromWhite">#38ffffff</color>
+    <color name="lightGrayFromWhite">#68ffffff</color>
+    <color name="mediumGrayFromWhite">#98ffffff</color>
+    <color name="darkGrayFromWhite">#c8ffffff</color>
+    <color name="darkestGrayFromWhite">#e8ffffff</color>
+    <color name="lightDropdownBkg">#dBc6f1</color>
+    <color name="lightPrimaryStartButtonGradient">#bB66f1</color>
+    <color name="darkPrimaryStartButtonGradient">#7979e0</color>
 </resources>
