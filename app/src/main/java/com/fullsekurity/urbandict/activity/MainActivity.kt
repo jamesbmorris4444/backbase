@@ -1,6 +1,7 @@
 package com.fullsekurity.urbandict.activity
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
@@ -14,6 +15,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableField
 import androidx.fragment.app.FragmentManager
 import com.airbnb.lottie.LottieAnimationView
 import com.airbnb.lottie.LottieDrawable
@@ -24,17 +26,24 @@ import com.fullsekurity.urbandict.databinding.ActivityMainBinding
 import com.fullsekurity.urbandict.map.MapFragment
 import com.fullsekurity.urbandict.repository.Repository
 import com.fullsekurity.urbandict.repository.storage.City
+import com.fullsekurity.urbandict.repository.storage.Coordinates
 import com.fullsekurity.urbandict.ui.UIViewModel
 import com.fullsekurity.urbandict.utils.Constants.CITY_FRAGMENT_TAG
 import com.fullsekurity.urbandict.utils.Constants.MAP_FRAGMENT_TAG
 import com.fullsekurity.urbandict.utils.DaggerViewModelDependencyInjector
 import com.fullsekurity.urbandict.utils.ViewModelInjectorModule
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity(), Callbacks {
+class MainActivity : AppCompatActivity(), Callbacks, OnMapReadyCallback {
 
     lateinit var repository: Repository
     @Inject
@@ -42,6 +51,9 @@ class MainActivity : AppCompatActivity(), Callbacks {
 
     private lateinit var lottieBackgroundView: LottieAnimationView
     private lateinit var activityMainBinding: ActivityMainBinding
+    var orientation: Int = Configuration.ORIENTATION_PORTRAIT
+    val doubleFragments: ObservableField<Boolean> = ObservableField(false)
+    private var city: City = City("US", "Dallas", 0, Coordinates(-0.000500, 51.476852))
 
     enum class UITheme {
         LIGHT, DARK, NOT_ASSIGNED,
@@ -64,7 +76,12 @@ class MainActivity : AppCompatActivity(), Callbacks {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener { onBackPressed() }
         lottieBackgroundView = main_background_lottie
-        startCityFragment()
+        orientation = resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            loadCityFragment()
+        } else {
+            loadDoubleFragments()
+        }
         val settings = getSharedPreferences("THEME", Context.MODE_PRIVATE)
         val name: String? = settings.getString("THEME", UITheme.LIGHT.name)
         if (name != null) {
@@ -75,10 +92,11 @@ class MainActivity : AppCompatActivity(), Callbacks {
     override fun onResume() {
         super.onResume()
         setupToolbar()
-        uiViewModel.lottieAnimation(lottieBackgroundView, uiViewModel.backgroundLottieJsonFileName, LottieDrawable.INFINITE)
+        val fileName: String = if (orientation == Configuration.ORIENTATION_PORTRAIT) uiViewModel.backgroundLottieJsonFileName else ""
+        uiViewModel.lottieAnimation(lottieBackgroundView, fileName, LottieDrawable.INFINITE)
     }
 
-    fun startMapFragment(city: City) {
+    fun loadMapFragment(city: City) {
         supportFragmentManager.popBackStack(CITY_FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         supportFragmentManager
             .beginTransaction()
@@ -88,18 +106,38 @@ class MainActivity : AppCompatActivity(), Callbacks {
             .commitAllowingStateLoss()
     }
 
-    private fun startCityFragment() {
-        if (supportFragmentManager.findFragmentByTag(CITY_FRAGMENT_TAG) == null) {
-            loadCityFragment()
-        }
+    private fun loadDoubleFragments() {
+        doubleFragments.set(true)
+        supportFragmentManager
+            .beginTransaction()
+            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
+            .replace(R.id.city_container, CityFragment.newInstance(), CITY_FRAGMENT_TAG)
+            .commitAllowingStateLoss()
+        onCityClicked(city)
     }
 
     private fun loadCityFragment() {
+        doubleFragments.set(false)
         supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
             .replace(R.id.main_activity_container, CityFragment.newInstance(), CITY_FRAGMENT_TAG)
             .commitAllowingStateLoss()
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        city?.let { city ->
+            var cityLatLng = LatLng(city.coord.lat, city.coord.lon)
+            googleMap.clear()
+            googleMap.addMarker(MarkerOptions().position(cityLatLng).title(city.name))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(cityLatLng))
+        }
+    }
+
+    fun onCityClicked(city: City) {
+        this.city = city
+        val mapFragment: SupportMapFragment = supportFragmentManager.findFragmentById(R.id.map_container) as SupportMapFragment
+        mapFragment.getMapAsync(this)
     }
 
     private fun setupToolbar() {
@@ -133,7 +171,8 @@ class MainActivity : AppCompatActivity(), Callbacks {
                 currentTheme = UITheme.LIGHT
             }
             uiViewModel.currentTheme = currentTheme
-            uiViewModel.lottieAnimation(lottieBackgroundView, uiViewModel.backgroundLottieJsonFileName, LottieDrawable.INFINITE)
+            val fileName: String = if (orientation == Configuration.ORIENTATION_PORTRAIT) uiViewModel.backgroundLottieJsonFileName else ""
+            uiViewModel.lottieAnimation(lottieBackgroundView, fileName, LottieDrawable.INFINITE)
             setupToolbar()
             true
         }

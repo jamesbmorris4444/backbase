@@ -1,5 +1,6 @@
 package com.fullsekurity.urbandict.city
 
+import android.content.res.Configuration
 import androidx.databinding.ObservableField
 import com.fullsekurity.urbandict.activity.Callbacks
 import com.fullsekurity.urbandict.recyclerview.RecyclerViewItemViewModel
@@ -19,7 +20,11 @@ class CityItemViewModel(private val callbacks: Callbacks) : RecyclerViewItemView
     }
 
     fun onCityClicked() {
-        callbacks.fetchActivity().startMapFragment(city)
+        if (callbacks.fetchActivity().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            callbacks.fetchActivity().loadMapFragment(city)
+        } else {
+            callbacks.fetchActivity().onCityClicked(city)
+        }
     }
 
 }

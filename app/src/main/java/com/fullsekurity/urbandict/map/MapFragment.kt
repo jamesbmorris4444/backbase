@@ -38,7 +38,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         readBundle(arguments)
-        var rootView = inflater.inflate(R.layout.map_fragment, container, false)
+        var rootView = inflater.inflate(R.layout.activity_maps, container, false)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         return rootView
@@ -51,7 +51,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         city?.let { city ->
-            var cityLatLng = LatLng(city.coord.lat, city.coord.lat)
+            var cityLatLng = LatLng(city.coord.lat, city.coord.lon)
             googleMap.addMarker(MarkerOptions().position(cityLatLng).title(city.name))
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(cityLatLng))
         }

@@ -67,11 +67,45 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/main_activity_container"
+            android:visibility="@{safeUnbox(mainActivity.doubleFragments ? View.GONE : View.VISIBLE)}"
             android:layout_below="@+id/service_progresss_bar"
             android:layout_marginTop="15dp"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/citys_item_root_view"
+            android:visibility="@{safeUnbox(mainActivity.doubleFragments ? View.VISIBLE : View.GONE)}"
+            android:layout_below="@+id/service_progresss_bar"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/city_container"
+                android:layout_marginTop="15dp"
+                android:layout_width="0dp"
+                app:layout_constraintWidth_percent="0.5"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/map_container" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/map_container"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="0dp"
+                app:layout_constraintWidth_percent="0.5"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/city_container"
+                app:layout_constraintRight_toRightOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ProgressBar
                 android:id="@+id/main_progress_bar"
