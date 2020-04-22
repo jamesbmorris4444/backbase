@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentManager
 import com.airbnb.lottie.LottieAnimationView
 import com.airbnb.lottie.LottieDrawable
 import com.fullsekurity.urbandict.R
@@ -25,11 +26,13 @@ import com.fullsekurity.urbandict.city.CityFragment
 import com.fullsekurity.urbandict.city.CityListViewModel
 import com.fullsekurity.urbandict.databinding.ActivityMainBinding
 import com.fullsekurity.urbandict.logger.LogUtils
+import com.fullsekurity.urbandict.map.MapFragment
 import com.fullsekurity.urbandict.repository.Repository
 import com.fullsekurity.urbandict.services.LongRunningService
 import com.fullsekurity.urbandict.services.ServiceCallbacks
 import com.fullsekurity.urbandict.ui.UIViewModel
-import com.fullsekurity.urbandict.utils.Constants.ROOT_FRAGMENT_TAG
+import com.fullsekurity.urbandict.utils.Constants.CITY_FRAGMENT_TAG
+import com.fullsekurity.urbandict.utils.Constants.MAP_FRAGMENT_TAG
 import com.fullsekurity.urbandict.utils.DaggerViewModelDependencyInjector
 import com.fullsekurity.urbandict.utils.ViewModelInjectorModule
 import kotlinx.android.synthetic.main.activity_main.*
@@ -68,7 +71,7 @@ class MainActivity : AppCompatActivity(), Callbacks, ServiceCallbacks {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener { onBackPressed() }
         lottieBackgroundView = main_background_lottie
-        loadInitialFragment()
+        startCityFragment()
         val settings = getSharedPreferences("THEME", Context.MODE_PRIVATE)
         val name: String? = settings.getString("THEME", UITheme.LIGHT.name)
         if (name != null) {
@@ -148,17 +151,27 @@ class MainActivity : AppCompatActivity(), Callbacks, ServiceCallbacks {
         return main_progress_bar
     }
 
-    private fun loadInitialFragment() {
-        if (supportFragmentManager.findFragmentByTag(ROOT_FRAGMENT_TAG) == null) {
-            loadCitysFragment()
-        }
-    }
-
-    private fun loadCitysFragment() {
+    fun startMapFragment() {
+        supportFragmentManager.popBackStack(CITY_FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
-            .replace(R.id.main_activity_container, CityFragment.newInstance(), ROOT_FRAGMENT_TAG)
+            .replace(R.id.main_activity_container, MapFragment.newInstance(), MAP_FRAGMENT_TAG)
+            .addToBackStack(CITY_FRAGMENT_TAG)
+            .commitAllowingStateLoss()
+    }
+
+    private fun startCityFragment() {
+        if (supportFragmentManager.findFragmentByTag(CITY_FRAGMENT_TAG) == null) {
+            loadCityFragment()
+        }
+    }
+
+    private fun loadCityFragment() {
+        supportFragmentManager
+            .beginTransaction()
+            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
+            .replace(R.id.main_activity_container, CityFragment.newInstance(), CITY_FRAGMENT_TAG)
             .commitAllowingStateLoss()
     }
 

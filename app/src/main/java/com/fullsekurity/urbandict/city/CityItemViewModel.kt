@@ -15,4 +15,8 @@ class CityItemViewModel(private val callbacks: Callbacks) : RecyclerViewItemView
         name.set(item.name)
     }
 
+    fun onCityClicked() {
+        callbacks.fetchActivity().startMapFragment()
+    }
+
 }

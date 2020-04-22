@@ -5,7 +5,8 @@ import com.fullsekurity.urbandict.repository.storage.City
 object Constants {
 
     const val URBANDICT_ARRAY_DATA_TAG = "list"
-    const val ROOT_FRAGMENT_TAG = "root fragment"
+    const val CITY_FRAGMENT_TAG = "city fragment"
+    const val MAP_FRAGMENT_TAG = "map fragment"
     val URBANDICT_LIST_CLASS_TYPE = (ArrayList<City>()).javaClass
     const val URBANDICT_BASE_URL = "https://mashape-community-urban-dictionary.p.rapidapi.com/"
     const val URBANDICT_RAPID_API_HOST = "x-rapidapi-host: mashape-community-urban-dictionary.p.rapidapi.com"
@@ -19,6 +20,7 @@ object Constants {
     const val STANDARD_GRID_HEIGHT = 120f
     const val EDIT_TEXT_TO_BUTTON_RATIO = 3  // 3:1
     const val URBANDICT_TITLE = "Urban Dictionary Results"
+    const val GOOGLE_MAPS_API_KEY = "AIzaSyDM0VmpHlE6pSFppvYfJW_FfLw75bQU5xw"
 
 
 }

@@ -13,6 +13,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/citys_item_root_view"
+        android:onClick="@{() -> cityItemViewModel.onCityClicked()}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
