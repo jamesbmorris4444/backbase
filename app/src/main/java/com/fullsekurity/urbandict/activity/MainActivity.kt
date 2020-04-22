@@ -2,7 +2,6 @@ package com.fullsekurity.urbandict.activity
 
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -101,21 +100,21 @@ class MainActivity : AppCompatActivity(), Callbacks, ServiceCallbacks {
         setupToolbar()
         uiViewModel.lottieAnimation(lottieBackgroundView, uiViewModel.backgroundLottieJsonFileName, LottieDrawable.INFINITE)
 
-        LogUtils.D(TAG, LogUtils.FilterTags.withTags(LogUtils.TagFilter.THM), String.format("MainActivity: bindService in onResume()"))
-        val intent = Intent(this, LongRunningService::class.java)
-        startService(intent)
-        bindService(intent, connection, Context.BIND_AUTO_CREATE)
+//        LogUtils.D(TAG, LogUtils.FilterTags.withTags(LogUtils.TagFilter.THM), String.format("MainActivity: bindService in onResume()"))
+//        val intent = Intent(this, LongRunningService::class.java)
+//        startService(intent)
+//        bindService(intent, connection, Context.BIND_AUTO_CREATE)
     }
 
     override fun onStop() {
         super.onStop()
-        unbindService(connection)
+//        unbindService(connection)
         LogUtils.D(TAG, LogUtils.FilterTags.withTags(LogUtils.TagFilter.THM), String.format("MainActivity: onStop unbindService()"))
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        stopService(Intent(this, LongRunningService::class.java))
+//        stopService(Intent(this, LongRunningService::class.java))
         LogUtils.D(TAG, LogUtils.FilterTags.withTags(LogUtils.TagFilter.THM), String.format("MainActivity: onDestroy stopService()"))
     }
 

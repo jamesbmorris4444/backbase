@@ -5,8 +5,6 @@ import android.widget.Filter
 import android.widget.Filterable
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 abstract class RecyclerViewFilterAdapter<T, VM : RecyclerViewItemViewModel<T>> :  RecyclerView.Adapter<RecyclerViewFilterAdapter.ItemViewHolder<T, VM>>(), Filterable {
@@ -121,7 +119,7 @@ abstract class RecyclerViewFilterAdapter<T, VM : RecyclerViewItemViewModel<T>> :
         override fun performFiltering(constraint: CharSequence): FilterResults {
             this.constraint = constraint.toString()
             val results = FilterResults()
-            results.values = if (constraint.isEmpty()) ArrayList(itemListFiltered) else getFilteredResults(constraint.toString().toLowerCase(Locale.getDefault()))
+            results.values = if (constraint.isEmpty()) ArrayList(itemListFiltered) else getFilteredResults(constraint.toString())
             return results
         }
 

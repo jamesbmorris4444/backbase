@@ -46,6 +46,9 @@ class CityFragment : Fragment(), Callbacks {
     override fun onResume() {
         super.onResume()
         (activity as MainActivity).toolbar.title = Constants.URBANDICT_TITLE
+        val progressBar = fetchActivity().getMainProgressBar()
+        progressBar.visibility = View.VISIBLE
+        cityListViewModel.initialize()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

@@ -57,32 +57,8 @@ class CityAdapter(private val callbacks: Callbacks) : RecyclerViewFilterAdapter<
         }
     }
 
-    override fun itemFilterable(donor: City, patternOfSubpatterns: String): Boolean {
-//        var returnValue = true
-//        var constraint = Utils.getPatternOfSubpatterns(patternOfSubpatterns, 0)
-//        if (constraint != "<>") {
-//            val regexPattern: String
-//            val index = constraint.indexOf(',')
-//            if (index < 0) {
-//                regexPattern = "^$constraint.*"
-//            } else {
-//                val last = constraint.substring(0, index)
-//                val first = constraint.substring(index + 1)
-//                regexPattern = "^$last.*,$first.*"
-//            }
-//            val regex = Regex(regexPattern, setOf(RegexOption.IGNORE_CASE))
-//            val target = donor.lastName + "," + donor.firstName
-//            returnValue = returnValue && regex.matches(target)  // must match entire target string
-//        }
-//        if (!returnValue) {
-//            return false
-//        }
-//        constraint = Utils.getPatternOfSubpatterns(patternOfSubpatterns, 1)
-//        if (constraint != "<>") {
-//            returnValue = returnValue && constraint.equals(donor.aboRh, ignoreCase = true)
-//        }
-//        return returnValue
-        return true
+    override fun itemFilterable(city: City, constraint: String): Boolean {
+        return city.name.startsWith(constraint)
     }
 
 }
