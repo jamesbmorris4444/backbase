@@ -45,10 +45,7 @@ class CityFragment : Fragment(), Callbacks {
 
     override fun onResume() {
         super.onResume()
-        (activity as MainActivity).toolbar.title = Constants.URBANDICT_TITLE
-        val progressBar = fetchActivity().getMainProgressBar()
-        progressBar.visibility = View.VISIBLE
-        cityListViewModel.initialize()
+        (activity as MainActivity).toolbar.title = Constants.CITY_TITLE
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -58,6 +55,8 @@ class CityFragment : Fragment(), Callbacks {
         binding.cityListViewModel = cityListViewModel
         binding.uiViewModel = uiViewModel
         uiViewModel.currentTheme = (activity as MainActivity).currentTheme
+        startMainProgressBar()
+        cityListViewModel.initialize()
         return binding.root
     }
 
@@ -85,6 +84,14 @@ class CityFragment : Fragment(), Callbacks {
 
     override fun fetchcityListViewModel() : CityListViewModel? {
         return cityListViewModel
+    }
+
+    override fun startMainProgressBar() {
+        fetchActivity().startMainProgressBar()
+    }
+
+    override fun stopMainProgressBar() {
+        fetchActivity().stopMainProgressBar()
     }
 
 }

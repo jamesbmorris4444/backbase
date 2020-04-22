@@ -7,4 +7,6 @@ interface Callbacks {
     fun fetchActivity(): MainActivity
     fun fetchRootView() : View
     fun fetchcityListViewModel() : CityListViewModel?
+    fun startMainProgressBar()
+    fun stopMainProgressBar()
 }

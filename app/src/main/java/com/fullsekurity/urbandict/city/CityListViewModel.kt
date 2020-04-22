@@ -30,6 +30,8 @@ class CityListViewModel(private val callbacks: Callbacks) : RecyclerViewViewMode
     override var adapter: CityAdapter = CityAdapter(callbacks)
     override val itemDecorator: RecyclerView.ItemDecoration? = null
     val listIsVisible: ObservableField<Boolean> = ObservableField(true)
+    private var saveKey: String = ""
+    private var listOfCities: List<City> = listOf()
 
     @Inject
     lateinit var uiViewModel: UIViewModel
@@ -56,7 +58,11 @@ class CityListViewModel(private val callbacks: Callbacks) : RecyclerViewViewMode
     }
 
     fun initialize() {
-        repository.getCities(this::showCities)
+        if (listOfCities.isEmpty()) {
+            repository.getCities(this::showCities)
+        } else {
+            showCities(listOfCities)
+        }
     }
 
     // observable used for two-way donations binding. Values set into this field will show in view.
@@ -64,19 +70,21 @@ class CityListViewModel(private val callbacks: Callbacks) : RecyclerViewViewMode
     var editTextNameInput: ObservableField<String> = ObservableField("")
     fun onTextNameChanged(key: CharSequence, start: Int, before: Int, count: Int) {
         adapter.filter.filter(key)
+        saveKey = key.toString()
         // within "string", the "count" characters beginning at index "start" have just replaced old text that had length "before"
     }
     var hintTextName: ObservableField<String> = ObservableField(getApplication<Application>().applicationContext.getString(R.string.citys_hint_text))
     var editTextNameVisibility: ObservableField<Int> = ObservableField(View.VISIBLE)
 
     private fun showCities(cityList: List<City>?) {
-        val progressBar = callbacks.fetchActivity().getMainProgressBar()
-        progressBar.visibility = View.GONE
+        callbacks.stopMainProgressBar()
         if (cityList == null) {
             listIsVisible.set(false)
         } else {
-            listIsVisible.set(cityList.isNotEmpty())
+            listOfCities = cityList
             adapter.addAll(cityList.sortedBy{ city -> Utils.cityComparison(city) })
+            adapter.filter.filter(saveKey)
+            listIsVisible.set(true)
         }
     }
 

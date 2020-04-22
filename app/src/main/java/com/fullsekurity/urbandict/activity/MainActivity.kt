@@ -1,18 +1,14 @@
 package com.fullsekurity.urbandict.activity
 
-import android.content.ComponentName
 import android.content.Context
-import android.content.ServiceConnection
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.IBinder
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -25,11 +21,9 @@ import com.fullsekurity.urbandict.R
 import com.fullsekurity.urbandict.city.CityFragment
 import com.fullsekurity.urbandict.city.CityListViewModel
 import com.fullsekurity.urbandict.databinding.ActivityMainBinding
-import com.fullsekurity.urbandict.logger.LogUtils
 import com.fullsekurity.urbandict.map.MapFragment
 import com.fullsekurity.urbandict.repository.Repository
-import com.fullsekurity.urbandict.services.LongRunningService
-import com.fullsekurity.urbandict.services.ServiceCallbacks
+import com.fullsekurity.urbandict.repository.storage.City
 import com.fullsekurity.urbandict.ui.UIViewModel
 import com.fullsekurity.urbandict.utils.Constants.CITY_FRAGMENT_TAG
 import com.fullsekurity.urbandict.utils.Constants.MAP_FRAGMENT_TAG
@@ -40,7 +34,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity(), Callbacks, ServiceCallbacks {
+class MainActivity : AppCompatActivity(), Callbacks {
 
     lateinit var repository: Repository
     @Inject
@@ -48,7 +42,6 @@ class MainActivity : AppCompatActivity(), Callbacks, ServiceCallbacks {
 
     private lateinit var lottieBackgroundView: LottieAnimationView
     private lateinit var activityMainBinding: ActivityMainBinding
-    private var thumbsStatusMenuItem: MenuItem? = null
 
     enum class UITheme {
         LIGHT, DARK, NOT_ASSIGNED,
@@ -77,86 +70,20 @@ class MainActivity : AppCompatActivity(), Callbacks, ServiceCallbacks {
         if (name != null) {
             currentTheme = UITheme.valueOf(name)
         }
-        serviceProgressBar = service_progresss_bar
-    }
-
-    // Start Service
-
-    private val TAG = MainActivity::class.java.simpleName
-    lateinit var longRunningService: LongRunningService
-    private lateinit var serviceProgressBar: ProgressBar
-
-    private val connection = object : ServiceConnection {
-        override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            LogUtils.D(TAG, LogUtils.FilterTags.withTags(LogUtils.TagFilter.THM), String.format("MainActivity: onremoteServiceConnected()"))
-            val binder = service as LongRunningService.LocalBinder
-            longRunningService = binder.getService()
-            longRunningService.setServiceCallbacks(this@MainActivity)
-        }
-        override fun onServiceDisconnected(arg0: ComponentName) {
-            LogUtils.D(TAG, LogUtils.FilterTags.withTags(LogUtils.TagFilter.THM), String.format("MainActivity: onServiceDisconnected()"))
-        }
     }
 
     override fun onResume() {
         super.onResume()
         setupToolbar()
         uiViewModel.lottieAnimation(lottieBackgroundView, uiViewModel.backgroundLottieJsonFileName, LottieDrawable.INFINITE)
-
-//        LogUtils.D(TAG, LogUtils.FilterTags.withTags(LogUtils.TagFilter.THM), String.format("MainActivity: bindService in onResume()"))
-//        val intent = Intent(this, LongRunningService::class.java)
-//        startService(intent)
-//        bindService(intent, connection, Context.BIND_AUTO_CREATE)
     }
 
-    override fun onStop() {
-        super.onStop()
-//        unbindService(connection)
-        LogUtils.D(TAG, LogUtils.FilterTags.withTags(LogUtils.TagFilter.THM), String.format("MainActivity: onStop unbindService()"))
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        stopService(Intent(this, LongRunningService::class.java))
-        LogUtils.D(TAG, LogUtils.FilterTags.withTags(LogUtils.TagFilter.THM), String.format("MainActivity: onDestroy stopService()"))
-    }
-
-    fun startPretendLongRunningTask() {
-        LogUtils.D(TAG, LogUtils.FilterTags.withTags(LogUtils.TagFilter.THM), String.format("MainActivity: startPretendLongRunningTask()"))
-        longRunningService.startPretendLongRunningTask()
-    }
-
-    fun pausePretendLongRunningTask() {
-        LogUtils.D(TAG, LogUtils.FilterTags.withTags(LogUtils.TagFilter.THM), String.format("MainActivity: pausePretendLongRunningTask()"))
-        longRunningService.pausePretendLongRunningTask()
-    }
-
-    fun resumePretendLongRunningTask() {
-        LogUtils.D(TAG, LogUtils.FilterTags.withTags(LogUtils.TagFilter.THM), String.format("MainActivity: resumePretendLongRunningTask()"))
-        longRunningService.resumePretendLongRunningTask()
-    }
-
-    override fun setServiceProgress(progress: Int) {
-        serviceProgressBar.progress = progress
-    }
-
-    override fun setProgressMaxValue(maxValue: Int) {
-        serviceProgressBar.max = maxValue
-
-    }
-
-    // End Service
-
-    fun getMainProgressBar(): ProgressBar {
-        return main_progress_bar
-    }
-
-    fun startMapFragment() {
+    fun startMapFragment(city: City) {
         supportFragmentManager.popBackStack(CITY_FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
-            .replace(R.id.main_activity_container, MapFragment.newInstance(), MAP_FRAGMENT_TAG)
+            .replace(R.id.main_activity_container, MapFragment.newInstance(city), MAP_FRAGMENT_TAG)
             .addToBackStack(CITY_FRAGMENT_TAG)
             .commitAllowingStateLoss()
     }
@@ -198,14 +125,6 @@ class MainActivity : AppCompatActivity(), Callbacks, ServiceCallbacks {
         return wrapDrawable
     }
 
-    private fun setToolbarThumbStatus(resInt: Int) {
-        thumbsStatusMenuItem?.let { thumbsStatusMenuItem ->
-            runOnUiThread {
-                thumbsStatusMenuItem.icon = ContextCompat.getDrawable(this, resInt)
-            }
-        }
-    }
-
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_toggle_theme -> {
             if (currentTheme == UITheme.LIGHT) {
@@ -218,16 +137,6 @@ class MainActivity : AppCompatActivity(), Callbacks, ServiceCallbacks {
             setupToolbar()
             true
         }
-        R.id.action_set_up_sort -> {
-            uiViewModel.sortThumbsUp = true
-            setToolbarThumbStatus(R.drawable.ic_thumbsup_dark)
-            true
-        }
-        R.id.action_set_down_sort -> {
-            uiViewModel.sortThumbsUp = false
-            setToolbarThumbStatus(R.drawable.ic_thumbsdown_dark)
-            true
-        }
         else -> {
             super.onOptionsItemSelected(item)
         }
@@ -235,8 +144,6 @@ class MainActivity : AppCompatActivity(), Callbacks, ServiceCallbacks {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu, menu)
-        thumbsStatusMenuItem = menu.findItem(R.id.thumb_status)
-        setToolbarThumbStatus(R.drawable.ic_thumbsup_dark)
         return true
     }
 
@@ -249,5 +156,13 @@ class MainActivity : AppCompatActivity(), Callbacks, ServiceCallbacks {
     }
 
     override fun fetchcityListViewModel() : CityListViewModel? { return null }
+
+    override fun startMainProgressBar() {
+        main_progress_bar.visibility = View.VISIBLE
+    }
+
+    override fun stopMainProgressBar() {
+        main_progress_bar.visibility = View.GONE
+    }
 
 }

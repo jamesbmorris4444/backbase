@@ -19,7 +19,8 @@ object Constants {
     const val STANDARD_BUTTON_HEIGHT = 50f
     const val STANDARD_GRID_HEIGHT = 120f
     const val EDIT_TEXT_TO_BUTTON_RATIO = 3  // 3:1
-    const val URBANDICT_TITLE = "Urban Dictionary Results"
+    const val CITY_TITLE = "Backbase City Mapper"
+    const val MAP_TITLE = "Backbase Map: "
     const val GOOGLE_MAPS_API_KEY = "AIzaSyDM0VmpHlE6pSFppvYfJW_FfLw75bQU5xw"
 
 

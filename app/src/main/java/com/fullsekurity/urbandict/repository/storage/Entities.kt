@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class City(
+data class City (
 
     @SerializedName(value = "country") var country: String,
     @SerializedName(value = "name") var name: String,
@@ -17,7 +17,7 @@ data class City(
 @Parcelize
 data class Coordinates(
 
-    @SerializedName(value = "lon") var lon: Float,
-    @SerializedName(value = "lat") var lat: Float
+    @SerializedName(value = "lon") var lon: Double,
+    @SerializedName(value = "lat") var lat: Double
 
 ) : Parcelable

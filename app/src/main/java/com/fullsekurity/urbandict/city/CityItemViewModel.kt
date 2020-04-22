@@ -7,16 +7,19 @@ import com.fullsekurity.urbandict.repository.storage.City
 
 class CityItemViewModel(private val callbacks: Callbacks) : RecyclerViewItemViewModel<City>() {
 
+    private lateinit var city: City
+
     val country: ObservableField<String> = ObservableField("")
     val name: ObservableField<String> = ObservableField("")
 
-    override fun setItem(item: City) {
-        country.set(", ${item.country}")
-        name.set(item.name)
+    override fun setItem(city: City) {
+        country.set(", ${city.country}")
+        name.set(city.name)
+        this.city = city
     }
 
     fun onCityClicked() {
-        callbacks.fetchActivity().startMapFragment()
+        callbacks.fetchActivity().startMapFragment(city)
     }
 
 }

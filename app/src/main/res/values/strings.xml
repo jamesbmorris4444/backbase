@@ -1,10 +1,8 @@
 <resources>
-    <string name="app_name">Urban Dictionary</string>
+    <string name="app_name">Backbase</string>
 
     <!-- toolbar overflow menu actions -->
     <string name="action_toggle_themes">Change Theme</string>
-    <string name="action_set_up_sort">Sort Thumbs Up</string>
-    <string name="action_set_down_sort">Sort Thumbs Down</string>
 
     <!-- standard modals -->
     <string name="std_modal_urban_dictionary_failure_title">Timeout or Error in Search</string>
@@ -15,7 +13,7 @@
     <string name="button_search">Search</string>
 
     <!-- miscellaneous -->
-    <string name="search_no_elements">No Urban Dictionary citys found</string>
-    <string name="citys_hint_text">Enter Search Term</string>
+    <string name="search_no_elements">No cities found</string>
+    <string name="citys_hint_text">Enter City Name</string>
 
 </resources>
