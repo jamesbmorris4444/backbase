@@ -14,7 +14,6 @@ import com.fullsekurity.urbandict.repository.Repository
 import com.fullsekurity.urbandict.repository.storage.City
 import com.fullsekurity.urbandict.ui.UIViewModel
 import com.fullsekurity.urbandict.utils.DaggerViewModelDependencyInjector
-import com.fullsekurity.urbandict.utils.Utils
 import com.fullsekurity.urbandict.utils.ViewModelInjectorModule
 import javax.inject.Inject
 
@@ -82,7 +81,7 @@ class CityListViewModel(private val callbacks: Callbacks) : RecyclerViewViewMode
             listIsVisible.set(false)
         } else {
             listOfCities = cityList
-            adapter.addAll(cityList.sortedBy{ city -> Utils.cityComparison(city) })
+            adapter.addAll(cityList.sortedWith(compareBy(City::name, City::country)))
             adapter.filter.filter(saveKey)
             listIsVisible.set(true)
         }

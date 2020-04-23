@@ -1,9 +1,12 @@
 package com.fullsekurity.urbandict.map
 
+import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.fullsekurity.urbandict.R
 import com.fullsekurity.urbandict.activity.MainActivity
@@ -14,11 +17,12 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MapFragment : Fragment(), OnMapReadyCallback {
+class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private var city: City? = null
 
@@ -51,9 +55,25 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         city?.let { city ->
+            googleMap.setOnMarkerClickListener(this)
             var cityLatLng = LatLng(city.coord.lat, city.coord.lon)
             googleMap.addMarker(MarkerOptions().position(cityLatLng).title(city.name))
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(cityLatLng))
+        }
+    }
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        basicAlert()
+        return true
+    }
+
+    private fun basicAlert() {
+        val builder = AlertDialog.Builder(activity as Context)
+        val positiveButtonClick = { dialog: DialogInterface, which: Int -> }
+        with(builder) {
+            setMessage("${city?.name}, ${city?.country} [${city?.coord?.lat},${city?.coord?.lon}]")
+            setPositiveButton("OK", DialogInterface.OnClickListener(function = positiveButtonClick))
+            show()
         }
     }
 

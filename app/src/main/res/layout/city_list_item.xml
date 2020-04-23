@@ -22,6 +22,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:text="@{cityItemViewModel.name}"
             app:text_font="@{uiViewModel.wordItemTextTypeface}"
             app:text_color="@{uiViewModel.wordItemTextColor}"
@@ -35,13 +37,30 @@
             android:id="@+id/country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:text="@{cityItemViewModel.country}"
             app:text_font="@{uiViewModel.wordItemTextTypeface}"
             app:text_color="@{uiViewModel.wordItemTextColor}"
             app:text_size="@{safeUnbox(uiViewModel.wordItemTextSize)}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/name" />
+            app:layout_constraintLeft_toRightOf="@+id/name"
+            app:layout_constraintRight_toLeftOf="@+id/lat_lon" />
+
+        <android.widget.TextView
+            android:id="@+id/lat_lon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@{cityItemViewModel.latLng}"
+            app:text_font="@{uiViewModel.wordItemTextTypeface}"
+            app:text_color="@{uiViewModel.wordItemTextColor}"
+            app:text_size="@{safeUnbox(uiViewModel.wordItemTextSize)}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/country" />
 
         <LinearLayout
             android:id="@+id/divider"

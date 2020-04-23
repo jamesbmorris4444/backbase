@@ -12,10 +12,12 @@ class CityItemViewModel(private val callbacks: Callbacks) : RecyclerViewItemView
 
     val country: ObservableField<String> = ObservableField("")
     val name: ObservableField<String> = ObservableField("")
+    val latLng: ObservableField<String> = ObservableField("")
 
     override fun setItem(city: City) {
         country.set(", ${city.country}")
         name.set(city.name)
+        latLng.set("[${city.coord.lat},${city.coord.lon}]")
         this.city = city
     }
 

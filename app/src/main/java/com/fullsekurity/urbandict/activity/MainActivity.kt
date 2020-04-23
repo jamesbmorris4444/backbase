@@ -1,6 +1,7 @@
 package com.fullsekurity.urbandict.activity
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -10,6 +11,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -37,13 +39,14 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity(), Callbacks, OnMapReadyCallback {
+class MainActivity : AppCompatActivity(), Callbacks, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     lateinit var repository: Repository
     @Inject
@@ -127,10 +130,26 @@ class MainActivity : AppCompatActivity(), Callbacks, OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         city?.let { city ->
+            googleMap.setOnMarkerClickListener(this)
             var cityLatLng = LatLng(city.coord.lat, city.coord.lon)
             googleMap.clear()
             googleMap.addMarker(MarkerOptions().position(cityLatLng).title(city.name))
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(cityLatLng))
+        }
+    }
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        basicAlert()
+        return true
+    }
+
+    private fun basicAlert() {
+        val builder = AlertDialog.Builder(this)
+        val positiveButtonClick = { _: DialogInterface, _: Int -> }
+        with(builder) {
+            setMessage("${city.name}, ${city.country} [${city.coord.lat},${city.coord.lon}]")
+            setPositiveButton("OK", DialogInterface.OnClickListener(function = positiveButtonClick))
+            show()
         }
     }
 
