@@ -58,7 +58,7 @@ class CityAdapter(private val callbacks: Callbacks) : RecyclerViewFilterAdapter<
     }
 
     override fun itemFilterable(city: City, constraint: String): Boolean {
-        return city.name.startsWith(constraint)
+        return city.name.startsWith(constraint, true)
     }
 
 }
