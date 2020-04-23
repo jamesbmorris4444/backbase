@@ -21,7 +21,5 @@ object Constants {
     const val EDIT_TEXT_TO_BUTTON_RATIO = 3  // 3:1
     const val CITY_TITLE = "Backbase City Mapper"
     const val MAP_TITLE = "Backbase Map: "
-    const val GOOGLE_MAPS_API_KEY = "AIzaSyDM0VmpHlE6pSFppvYfJW_FfLw75bQU5xw"
-
 
 }
